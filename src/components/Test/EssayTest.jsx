@@ -19,32 +19,32 @@ export default function EssayTest({ data, onSubmit }) {
   const { meaning } = currentQuestion.question;
   const isLastQuestion = currentIndex === data.length - 1;
 
+  const createUserAnswer = () => ({
+    testId: currentQuestion.testId,
+    questionId: currentQuestion.questionId,
+    correctAnswer: currentQuestion.correctAnswer,
+    answer: answer.trim(),
+    correct: answer.trim() === currentQuestion.correctAnswer,
+    meaning: meaning
+  });
+
   const handleNext = () => {
     if (!answer.trim()) return;
-    const userAnswer = {
-      testId: currentQuestion.testId,
-      questionId: currentQuestion.questionId,
-      hanzi: currentQuestion.correctAnswer,
-      answer: answer.trim(),
-      correct: answer.trim() === currentQuestion.correctAnswer,
-      meaning: meaning
-    };
+    const userAnswer = createUserAnswer();
     setAnswers(prev => [...prev, userAnswer]);
     setAnswer('');
     setCurrentIndex(prev => prev + 1);
   };
 
   const handleFinalSubmit = () => {
-    if (!answer.trim()) return;
-    const userAnswer = {
-      testId: currentQuestion.testId,
-      questionId: currentQuestion.questionId,
-      hanzi: currentQuestion.correctAnswer,
-      answer: answer.trim(),
-      correct: answer.trim() === currentQuestion.correctAnswer,
-      meaning: meaning
-    };
-    onSubmit([...answers, userAnswer]);
+    const trimmed = answer.trim();
+    const fullAnswers = trimmed
+      ? [...answers, createUserAnswer()]
+      : [...answers];
+
+    if (fullAnswers.length === 0) return; // không gửi nếu người dùng bỏ hết
+
+    onSubmit(fullAnswers);
   };
 
   return (
@@ -71,10 +71,10 @@ export default function EssayTest({ data, onSubmit }) {
 
       <AnimatedButton
         onClick={isLastQuestion ? handleFinalSubmit : handleNext}
-        disabled={!answer.trim()}
+        disabled={!answer.trim() && !isLastQuestion}
         className={`w-full mt-6 py-3 text-lg ${
-          answer.trim()
-            ? 'bg-green-500 hover:bg-green-600' 
+          answer.trim() || isLastQuestion
+            ? 'bg-green-500 hover:bg-green-600'
             : 'bg-gray-400 cursor-not-allowed'
         } text-white rounded-lg`}
       >
