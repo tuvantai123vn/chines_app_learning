@@ -31,13 +31,6 @@ export default function Register() {
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Đăng ký ngay để trải nghiệm hệ thống học tập thông minh
           </p>
-          <div className="hidden md:block mt-8">
-            <img 
-              src="/images/register-illustration.png"
-              alt="Đăng ký"
-              className="max-w-full h-auto"
-            />
-          </div>
         </div>
 
         {/* Form đăng ký */}
